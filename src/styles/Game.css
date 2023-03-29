@@ -1,0 +1,92 @@
+.board_{
+  width: 600px!important;
+  height: 660px!important;
+  margin-left: 5%;
+  margin-top: 3%;
+  border: 3px solid white;
+}
+body{
+  background-color: #111111;
+}
+/* .alert{
+  width: 100%;
+  height: 5%;
+  text-align: center;
+  background: red;
+  border-radius: 12px;
+  height: 25px;
+} */
+.name_space{
+  color: white;
+  margin: 5px;
+  font-family: 'cascadia code';
+}
+.game_info{
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10%;
+  margin-left: -22.5%;
+  border: white 3px solid;
+  height: fit-content;
+  width: 350px;
+}
+.game_info_title{
+  color: aqua;
+  font-size: large;
+  font-family: 'Cascadia Code';
+  text-decoration: underline 3px white;
+}
+.your_colour{
+  color: aqua;
+  font-size: large;
+  font-family: 'Cascadia Code';
+  padding-left: 5%;
+}
+.game_status{
+  color: aqua;
+  font-size: xx-large;
+  font-family: 'Cascadia Code';
+  padding-top: 6%;
+  margin-left: 2.5%;
+}
+@media screen and (max-width: 1270px) {
+  .all_div{
+    flex-direction: column;
+  }
+  .game_info{
+    margin-left: 8%;
+    margin-top: 1%;
+  }
+   .game_status{
+    padding-top: 00.5%;
+    margin-left: 5%;
+  }
+}
+.all_div{
+  display: flex;
+}
+html{
+  background-color: #090909!important;
+  overflow: auto!important;
+}
+.button {
+  border-radius: 12px;
+  font-size: medium;
+  font-family: 'Cascadia code';
+  width: 80%;
+  margin-left: 10%;
+  height: 5%;
+  background-color: aqua;
+  color: black;
+  border: none;
+  cursor: pointer;
+}
+.button:hover {
+  background-color: #00b3b3;
+}
+.button:active {
+  background-color: #008080; 
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}

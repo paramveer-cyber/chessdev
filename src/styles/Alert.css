@@ -1,0 +1,57 @@
+.alert{
+    background: #009c9c;
+    color: black;
+    font-family: 'Cascadia code';
+    display: flex;
+    border-radius: 12px;
+    align-items: center;
+    padding: 5px;
+  }
+  
+  .message{
+    font-size: large;
+    padding-left: 5px;
+  }
+  
+  .accept_deny {
+    display: flex;
+    margin-left: auto;
+  }
+  
+  .accept {
+    background-color: #6FCF97;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .accept:hover {
+    background-color: #52c586;
+  }
+  
+  .accept:active {
+    background-color: #449e73;
+  }
+  
+  .deny {
+    background-color: #EB5757;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .deny:hover {
+    background-color: #cf4a4a;
+  }
+  
+  .deny:active {
+    background-color: #ad4141;
+  }
+  
