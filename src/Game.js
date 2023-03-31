@@ -3,14 +3,15 @@ import { useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 import { io } from "socket.io-client";
-import notify_audio from './audios/notify.mp3'
-import move_audio from './audios/move-self.mp3'
+import notify_audio from "./audios/notify.mp3";
+import move_audio from "./audios/move-self.mp3";
 import Alert from "./Alert";
 
-const socket = io("https://chesssdev.glitch.me/", {transports: ["websocket"]});
-// const socket = io("http://localhost:8000/", { transports: ["websocket"] });
+// const socket = io("https://chesssdev.glitch.me/", {transports: ["websocket"]});
+const socket = io("http://localhost:8000/", { transports: ["websocket"] });
 
 function Game() {
+  //Variables
   const [chess, setchess] = useState(new Chess());
   const [moveFrom, setMoveFrom] = useState("");
   const [rightClickedSquares, setRightClickedSquares] = useState({});
@@ -22,6 +23,7 @@ function Game() {
   const [draw_state, setdraw_state] = useState(false);
   var notify = new Audio(notify_audio);
   var move_self = new Audio(move_audio);
+
   // Functions
 
   function getMoveOptions(square) {
@@ -37,7 +39,8 @@ function Game() {
     moves.map((move) => {
       newSquares[move.to] = {
         background:
-          chess.get(move.to) && chess.get(move.to).color !== chess.get(square).color
+          chess.get(move.to) &&
+            chess.get(move.to).color !== chess.get(square).color
             ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
             : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
         borderRadius: "50%",
@@ -75,13 +78,14 @@ function Game() {
       ...rightClickedSquares,
       [square]:
         rightClickedSquares[square] &&
-        rightClickedSquares[square].backgroundColor === colour
+          rightClickedSquares[square].backgroundColor === colour
           ? undefined
           : { backgroundColor: colour },
     });
   }
 
   window.onload = () => {
+    setMoveSquares({});
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name");
     const id = params.get("id");
@@ -93,9 +97,7 @@ function Game() {
       document.getElementById(
         "your_colour"
       ).textContent = `Your colour : ${colour}`;
-      console.log(colour);
     });
-
   };
 
   window.beforeunload = () => {
@@ -137,7 +139,7 @@ function Game() {
         } else {
           socket.emit("move", [sourceSquare, targetSquare]);
         }
-      } catch {}
+      } catch { }
     }
   };
 
@@ -150,11 +152,27 @@ function Game() {
         promotion: "q",
       });
       setPosition(chess.fen());
-      document.getElementById("game_status").textContent =
-        "Game Status: Playing!";
+      document.getElementById(
+        "game_status"
+      ).textContent = `Game Status:Playing as ${document.getElementById("your_colour").textContent.charAt(13) +
+        document.getElementById("your_colour").textContent.charAt(14) +
+        document.getElementById("your_colour").textContent.charAt(15) +
+        document.getElementById("your_colour").textContent.charAt(16) +
+        document.getElementById("your_colour").textContent.charAt(17) +
+        document.getElementById("your_colour").textContent.charAt(18)
+        }!`;
       checks();
-      move_self.play()
-    } catch {}
+      move_self.play();
+    } catch { }
+  };
+
+  const receive_sent_message = (name_, message) => {
+    const query = document.querySelector(".chat-box");
+    let element = document.createElement("div");
+    element.innerText = `${name_}: ${message}`;
+    element.classList.add("msg");
+    element.classList.add("opponent_msg");
+    query.append(element);
   };
 
   // Sockets
@@ -202,16 +220,32 @@ function Game() {
     handleMove(move[0], move[1]);
   });
 
-  socket.on("draw-by-agreement", ()=>{
-    document.getElementById("game_status").textContent = "Game Status: Draw by Agreement!"
-    setdraw_state(true)
-    document.getElementById("alert").style.opacity = 0; document.getElementById("alert").style.height = 0;document.getElementById("alert").style.width = 0;
-  })
+  socket.on("draw-by-agreement", () => {
+    document.getElementById("game_status").textContent =
+      "Game Status: Draw by Agreement!";
+    setdraw_state(true);
+    document.getElementById("alert").style.opacity = 0;
+    document.getElementById("alert").style.height = 0;
+    document.getElementById("alert").style.width = 0;
+  });
+
+  socket.on("recieve_msg", data => {
+    setTimeout(receive_sent_message(data[0], data[1]), 100)
+    console.log("hi")
+  });
 
   return (
     <>
       {showAlert[0] && (
-        <Alert className="alert" id="alert" func={()=>{socket.emit("draw-accepted");}} draw={showAlert[2]} message={showAlert[1]}  />
+        <Alert
+          className="alert"
+          id="alert"
+          func={() => {
+            socket.emit("draw-accepted");
+          }}
+          draw={showAlert[2]}
+          message={showAlert[1]}
+        />
       )}
       <div className="all_div">
         <div className="board_">
@@ -270,11 +304,37 @@ function Game() {
             Resign
           </button>
         </div>
-        {/* <div className="chat-box">
-          <div className="your_msg">HIII</div>
-          <input type="text" placeholder="Enter your message..." />
-          <button className="send">Send &#8594;</button>
-        </div> */}
+        <div className="chat-box">
+          {/* <div className="my_msg msg">You: <span>Hi How are you?</span></div>
+          <div className="opponent_msg msg">Not You: <span>Hi How are you?</span></div> */}
+        </div>
+        <input
+          className="msg_input"
+          id="input_msg"
+          type="text"
+          placeholder="Enter your message..."
+        />
+        <button
+          className="send"
+          onClick={(event) => {
+            event.preventDefault();
+            let msg = document.getElementById("input_msg");
+            if (msg.value === "") {
+              return 0;
+            }
+            socket.emit("send-msg", msg.value);
+            const query = document.querySelector(".chat-box");
+            let element = document.createElement("div");
+            element.innerText = `You: ${msg.value}`;
+            element.classList.add("msg");
+            element.classList.add("my_msg");
+            query.append(element);
+            msg.value = "";
+          }}
+          id="send"
+        >
+          Send &#8594;
+        </button>
       </div>
     </>
   );
