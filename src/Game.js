@@ -12,6 +12,10 @@ const socket = io("https://chesssdev.glitch.me/", {transports: ["websocket"]});
 
 function Game() {
   const [chess, setchess] = useState(new Chess());
+  const [moveFrom, setMoveFrom] = useState("");
+  const [rightClickedSquares, setRightClickedSquares] = useState({});
+  const [moveSquares, setMoveSquares] = useState({});
+  const [optionSquares, setOptionSquares] = useState({});
   const [position, setPosition] = useState(chess.fen());
   const [boardcolor, setboardcolor] = useState("white");
   const [showAlert, setShowAlert] = useState([false, "", false]);
@@ -19,6 +23,64 @@ function Game() {
   var notify = new Audio(notify_audio);
   var move_self = new Audio(move_audio);
   // Functions
+
+  function getMoveOptions(square) {
+    const moves = chess.moves({
+      square,
+      verbose: true,
+    });
+    if (moves.length === 0) {
+      return false;
+    }
+
+    const newSquares = {};
+    moves.map((move) => {
+      newSquares[move.to] = {
+        background:
+          chess.get(move.to) && chess.get(move.to).color !== chess.get(square).color
+            ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
+            : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
+        borderRadius: "50%",
+      };
+      return move;
+    });
+    newSquares[square] = {
+      background: "rgba(255, 255, 0, 0.4)",
+    };
+    setOptionSquares(newSquares);
+    return true;
+  }
+
+  function onSquareClick(square) {
+    setRightClickedSquares({});
+    function resetFirstMove(square) {
+      const hasOptions = getMoveOptions(square);
+      if (hasOptions) setMoveFrom(square);
+    }
+    if (!moveFrom) {
+      resetFirstMove(square);
+      return;
+    }
+    if (move === null) {
+      resetFirstMove(square);
+      return;
+    }
+    setMoveFrom("");
+    setOptionSquares({});
+  }
+
+  function onSquareRightClick(square) {
+    const colour = "rgba(255, 0, 0, 0.6)";
+    setRightClickedSquares({
+      ...rightClickedSquares,
+      [square]:
+        rightClickedSquares[square] &&
+        rightClickedSquares[square].backgroundColor === colour
+          ? undefined
+          : { backgroundColor: colour },
+    });
+  }
+
   window.onload = () => {
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name");
@@ -164,6 +226,17 @@ function Game() {
             arePremovesAllowed={false}
             boardOrientation={boardcolor}
             animationDuration={100}
+            onSquareClick={onSquareClick}
+            onSquareRightClick={onSquareRightClick}
+            customBoardStyle={{
+              borderRadius: "4px",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+            }}
+            customSquareStyles={{
+              ...moveSquares,
+              ...optionSquares,
+              ...rightClickedSquares,
+            }}
           />
           <p className="name_space">
             You: <span id="enemy_space"></span>
@@ -197,6 +270,11 @@ function Game() {
             Resign
           </button>
         </div>
+        {/* <div className="chat-box">
+          <div className="your_msg">HIII</div>
+          <input type="text" placeholder="Enter your message..." />
+          <button className="send">Send &#8594;</button>
+        </div> */}
       </div>
     </>
   );
