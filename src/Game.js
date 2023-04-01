@@ -229,8 +229,8 @@ function Game() {
     query.append(element);
   }
 
-  socket.off("got_a_message").on("got_a_message", (msg)=>{
-    add_msg(msg)
+  socket.off("got_a_message").on("got_a_message", (data)=>{
+    add_msg(data[0], data[1])
   });
 
   return (
