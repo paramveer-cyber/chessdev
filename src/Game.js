@@ -40,7 +40,7 @@ function Game() {
       newSquares[move.to] = {
         background:
           chess.get(move.to) &&
-            chess.get(move.to).color !== chess.get(square).color
+          chess.get(move.to).color !== chess.get(square).color
             ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
             : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
         borderRadius: "50%",
@@ -78,7 +78,7 @@ function Game() {
       ...rightClickedSquares,
       [square]:
         rightClickedSquares[square] &&
-          rightClickedSquares[square].backgroundColor === colour
+        rightClickedSquares[square].backgroundColor === colour
           ? undefined
           : { backgroundColor: colour },
     });
@@ -139,12 +139,11 @@ function Game() {
         } else {
           socket.emit("move", [sourceSquare, targetSquare]);
         }
-      } catch { }
+      } catch {}
     }
   };
 
   const handleMove = (sourceSquare, targetSquare) => {
-    console.log(chess.turn());
     try {
       chess.move({
         from: sourceSquare,
@@ -154,25 +153,17 @@ function Game() {
       setPosition(chess.fen());
       document.getElementById(
         "game_status"
-      ).textContent = `Game Status:Playing as ${document.getElementById("your_colour").textContent.charAt(13) +
+      ).textContent = `Game Status:Playing as ${
+        document.getElementById("your_colour").textContent.charAt(13) +
         document.getElementById("your_colour").textContent.charAt(14) +
         document.getElementById("your_colour").textContent.charAt(15) +
         document.getElementById("your_colour").textContent.charAt(16) +
         document.getElementById("your_colour").textContent.charAt(17) +
         document.getElementById("your_colour").textContent.charAt(18)
-        }!`;
+      }!`;
       checks();
       move_self.play();
-    } catch { }
-  };
-
-  const receive_sent_message = (name_, message) => {
-    const query = document.querySelector(".chat-box");
-    let element = document.createElement("div");
-    element.innerText = `${name_}: ${message}`;
-    element.classList.add("msg");
-    element.classList.add("opponent_msg");
-    query.append(element);
+    } catch {}
   };
 
   // Sockets
@@ -229,9 +220,17 @@ function Game() {
     document.getElementById("alert").style.width = 0;
   });
 
-  socket.on("recieve_msg", data => {
-    setTimeout(receive_sent_message(data[0], data[1]), 100)
-    console.log("hi")
+  function add_msg(msg, name_ = "You"){
+    const query = document.querySelector(".chat-box")
+    let element = document.createElement("div");
+    element.innerText = `${name_}: ${msg}`;
+    element.classList.add("msg");
+    element.classList.add("opponent_msg");
+    query.append(element);
+  }
+
+  socket.off("got_a_message").on("got_a_message", (msg)=>{
+    add_msg(msg)
   });
 
   return (
@@ -304,10 +303,7 @@ function Game() {
             Resign
           </button>
         </div>
-        <div className="chat-box">
-          {/* <div className="my_msg msg">You: <span>Hi How are you?</span></div>
-          <div className="opponent_msg msg">Not You: <span>Hi How are you?</span></div> */}
-        </div>
+        <div className="chat-box"></div>
         <input
           className="msg_input"
           id="input_msg"
@@ -316,20 +312,16 @@ function Game() {
         />
         <button
           className="send"
-          onClick={(event) => {
-            event.preventDefault();
-            let msg = document.getElementById("input_msg");
-            if (msg.value === "") {
-              return 0;
-            }
-            socket.emit("send-msg", msg.value);
-            const query = document.querySelector(".chat-box");
+          onClick={() => {
+            socket.emit("send_button_pressed", document.getElementById("input_msg").value);
+            console.log("CLICK")
+            const query = document.querySelector(".chat-box")
             let element = document.createElement("div");
-            element.innerText = `You: ${msg.value}`;
+            element.innerText = `You: ${document.getElementById("input_msg").value}`;
             element.classList.add("msg");
             element.classList.add("my_msg");
             query.append(element);
-            msg.value = "";
+            document.getElementById("input_msg").value = ""
           }}
           id="send"
         >
