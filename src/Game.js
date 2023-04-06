@@ -7,8 +7,8 @@ import notify_audio from "./audios/notify.mp3";
 import move_audio from "./audios/move-self.mp3";
 import Alert from "./Alert";
 
-const socket = io("https://chesssdev.glitch.me/", {transports: ["websocket"]});
-// const socket = io("http://localhost:8000/", { transports: ["websocket"] });
+// const socket = io("https://chesssdev.glitch.me/", {transports: ["websocket"]});
+const socket = io("http://localhost:8000/", { transports: ["websocket"] });
 
 function Game() {
   //Variables

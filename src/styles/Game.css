@@ -1,19 +1,22 @@
-.board_{
+.board_ {
   width: 600px!important;
   height: 660px!important;
   margin-left: 5%;
   margin-top: 3%;
   border: 3px solid white;
 }
-body{
+
+body {
   background-color: #111111;
 }
-.name_space{
+
+.name_space {
   color: white;
   margin: 5px;
   font-family: 'cascadia code';
 }
-.game_info{
+
+.game_info {
   padding: 5px;
   display: flex;
   flex-direction: column;
@@ -24,19 +27,22 @@ body{
   height: fit-content;
   width: 350px;
 }
-.game_info_title{
+
+.game_info_title {
   color: aqua;
   font-size: large;
   font-family: 'Cascadia Code';
   text-decoration: underline 3px white;
 }
-.your_colour{
+
+.your_colour {
   color: aqua;
   font-size: large;
   font-family: 'Cascadia Code';
   padding-left: 5%;
 }
-.game_status{
+
+.game_status {
   color: aqua;
   font-size: xx-large;
   font-family: 'Cascadia Code';
@@ -44,13 +50,16 @@ body{
   margin-left: 2.5%;
   height: fit-content;
 }
-.all_div{
+
+.all_div {
   display: flex;
 }
-html{
+
+html {
   background-color: #090909!important;
   overflow: auto!important;
 }
+
 .button {
   border-radius: 12px;
   font-size: medium;
@@ -63,13 +72,16 @@ html{
   border: none;
   cursor: pointer;
 }
+
 .button:hover {
   background-color: #00b3b3;
 }
+
 .button:active {
   background-color: #008080; 
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
 }
+
 .chat-box {
   margin-top: 22rem;
   margin-left: -37%;
@@ -80,7 +92,8 @@ html{
   border: 2px solid #00b3b3;
   overflow: auto;
 }
-.msg{
+
+.msg {
   padding: 5px;
   font-family: 'Cascadia Code';
   border-radius: 6px;
@@ -88,6 +101,7 @@ html{
   background-color: #00b3b3;
   color: black;
 }
+
 .msg_input {
   padding: 8px;
   border: none;
@@ -102,9 +116,11 @@ html{
   background-color: #272727;
   color: white;
 }
+
 .msg_input::placeholder {
   color: #a6a6a6;
 }
+
 .msg_input:focus {
   outline: none;
   box-shadow: 0 0 2px 1px aqua;
@@ -158,5 +174,24 @@ html{
   }
   .chat-box input{
     margin-top: 48.5%;
+  }
+  .msg_input{
+    left: 4%;
+    width: 81%;
+    top: 167%;
+  }
+  .send{
+    left: 88%;
+    top: 167%;
+    width: fit-content;
+    height: fit-content;
+  }
+}
+@media screen and (min-height: 750px) {
+  .send{
+    top: 150%;
+  }
+  .msg_input{
+    top: 150%;
   }
 }
