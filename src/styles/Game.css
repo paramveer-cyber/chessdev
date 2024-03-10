@@ -103,18 +103,16 @@ html {
 }
 
 .msg_input {
+  width: 75%;
+  margin: 8px;
   padding: 8px;
   border: none;
-  border-radius: 0.25rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  height: fit-content;
   overflow: auto;
-  position: absolute;
-  left: 48%;
-  width: 29%;
-  top: 89%;
-  background-color: #272727;
   color: white;
+  height: fit-content;
+  border-radius: 0.25rem;
+  background-color: #272727;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .msg_input::placeholder {
@@ -126,12 +124,8 @@ html {
   box-shadow: 0 0 2px 1px aqua;
 }
 .send {
-  position: absolute;
   padding: 8px;
-  left: 78.3%;
-  top: 88.8%;
-  width: 5.8%;
-  height: fit-content;
+  width: 15%;
   border-radius: 6px;
   cursor: pointer;
   background-color: #00b3b3;
@@ -155,6 +149,7 @@ html {
   clear: both;
   float: left;
 }
+
 @media screen and (max-width: 1270px) {
   .all_div{
     flex-direction: column;
@@ -169,29 +164,6 @@ html {
   }
   .chat-box{
     width: 98%;
-    margin-left: 1%;
-    margin-top: 1rem;
-  }
-  .chat-box input{
-    margin-top: 48.5%;
-  }
-  .msg_input{
-    left: 4%;
-    width: 81%;
-    top: 167%;
-  }
-  .send{
-    left: 88%;
-    top: 167%;
-    width: fit-content;
-    height: fit-content;
-  }
-}
-@media screen and (min-height: 750px) {
-  .send{
-    top: 150%;
-  }
-  .msg_input{
-    top: 150%;
+    margin: 5px;
   }
 }

@@ -11,7 +11,6 @@ const socket = io("https://chesssdev.glitch.me/", {transports: ["websocket"]});
 // const socket = io("http://localhost:8000/", { transports: ["websocket"] });
 
 function Game() {
-  //Variables
   const [chess, setchess] = useState(new Chess());
   const [moveFrom, setMoveFrom] = useState("");
   const [rightClickedSquares, setRightClickedSquares] = useState({});
@@ -25,7 +24,6 @@ function Game() {
   var move_self = new Audio(move_audio);
 
   // Functions
-
   function getMoveOptions(square) {
     const moves = chess.moves({
       square,
@@ -40,7 +38,7 @@ function Game() {
       newSquares[move.to] = {
         background:
           chess.get(move.to) &&
-          chess.get(move.to).color !== chess.get(square).color
+            chess.get(move.to).color !== chess.get(square).color
             ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
             : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
         borderRadius: "50%",
@@ -78,7 +76,7 @@ function Game() {
       ...rightClickedSquares,
       [square]:
         rightClickedSquares[square] &&
-        rightClickedSquares[square].backgroundColor === colour
+          rightClickedSquares[square].backgroundColor === colour
           ? undefined
           : { backgroundColor: colour },
     });
@@ -116,7 +114,7 @@ function Game() {
         document.getElementById("game_status").textContent =
           "Game Status: Draw!";
       } else if (chess.isCheckmate()) {
-        const winner = chess.turn() === "w" ? "Black" : "White";
+        const winner = chess.turn() === "b" ? "Black" : "White";
         document.getElementById(
           "game_status"
         ).textContent = `Game Status: ${winner} won!`;
@@ -139,7 +137,7 @@ function Game() {
         } else {
           socket.emit("move", [sourceSquare, targetSquare]);
         }
-      } catch {}
+      } catch { }
     }
   };
 
@@ -153,17 +151,16 @@ function Game() {
       setPosition(chess.fen());
       document.getElementById(
         "game_status"
-      ).textContent = `Game Status:Playing as ${
-        document.getElementById("your_colour").textContent.charAt(13) +
+      ).textContent = `Game Status:Playing as ${document.getElementById("your_colour").textContent.charAt(13) +
         document.getElementById("your_colour").textContent.charAt(14) +
         document.getElementById("your_colour").textContent.charAt(15) +
         document.getElementById("your_colour").textContent.charAt(16) +
         document.getElementById("your_colour").textContent.charAt(17) +
         document.getElementById("your_colour").textContent.charAt(18)
-      }!`;
+        }!`;
       checks();
       move_self.play();
-    } catch {}
+    } catch { }
   };
 
   // Sockets
@@ -220,7 +217,7 @@ function Game() {
     document.getElementById("alert").style.width = 0;
   });
 
-  function add_msg(msg, name_ = "You"){
+  function add_msg(msg, name_ = "You") {
     const query = document.querySelector(".chat-box")
     let element = document.createElement("div");
     element.innerText = `${name_}: ${msg}`;
@@ -229,7 +226,18 @@ function Game() {
     query.append(element);
   }
 
-  socket.off("got_a_message").on("got_a_message", (data)=>{
+  function send_msg() {
+    socket.emit("send_button_pressed", document.getElementById("input_msg").value);
+    const query = document.querySelector(".chat-box")
+    let element = document.createElement("div");
+    element.innerText = `You: ${document.getElementById("input_msg").value}`;
+    element.classList.add("msg");
+    element.classList.add("my_msg");
+    query.append(element);
+    document.getElementById("input_msg").value = ""
+  }
+
+  socket.off("got_a_message").on("got_a_message", (data) => {
     add_msg(data[0], data[1])
   });
 
@@ -303,30 +311,27 @@ function Game() {
             Resign
           </button>
         </div>
-        <div className="chat-box"></div>
-        <input
-          className="msg_input"
-          id="input_msg"
-          type="text"
-          placeholder="Enter your message..."
-        />
-        <button
-          className="send"
-          onClick={() => {
-            socket.emit("send_button_pressed", document.getElementById("input_msg").value);
-            console.log("CLICK")
-            const query = document.querySelector(".chat-box")
-            let element = document.createElement("div");
-            element.innerText = `You: ${document.getElementById("input_msg").value}`;
-            element.classList.add("msg");
-            element.classList.add("my_msg");
-            query.append(element);
-            document.getElementById("input_msg").value = ""
-          }}
-          id="send"
-        >
-          Send &#8594;
-        </button>
+        <div className="chat-box">
+          <input
+            className="msg_input"
+            id="input_msg"
+            type="text"
+            autoComplete={false}
+            placeholder="Enter your message..."
+            onKeyDown={(e)=>{
+              if (e.keyCode === 13){
+                send_msg()
+              }
+            }}
+          />
+          <button
+            className="send"
+            onClick={send_msg}
+            id="send"
+          >
+            Send &#8594;
+          </button>
+        </div>
       </div>
     </>
   );
