@@ -2,6 +2,4 @@
 
 Just another chess website.....
 
-===============================
-   Currently not Functional!
-===============================
+### Currently not Functional!
