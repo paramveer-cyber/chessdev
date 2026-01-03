@@ -7,7 +7,6 @@ import notify_audio from "./audios/notify.mp3";
 import move_audio from "./audios/move-self.mp3";
 import Alert from "./Alert";
 
-// const socket = io("https://chesssdev.glitch.me/", {transports: ["websocket"]});
 const socket = io("https://chessdevbackend.onrender.com", { transports: ["websocket"] });
 
 function Game() {
@@ -290,7 +289,7 @@ function Game() {
           <h1 className="game_info_title">Some Game Info:-</h1>
           <div className="your_colour" id="your_colour"></div>
           <div className="your_colour" id="turn">
-            Turn: white
+            Last Turn: white
           </div>
           <button
             className="button"
