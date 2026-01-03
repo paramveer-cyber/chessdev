@@ -7,8 +7,8 @@ import notify_audio from "./audios/notify.mp3";
 import move_audio from "./audios/move-self.mp3";
 import Alert from "./Alert";
 
-const socket = io("https://chesssdev.glitch.me/", {transports: ["websocket"]});
-// const socket = io("http://localhost:8000/", { transports: ["websocket"] });
+// const socket = io("https://chesssdev.glitch.me/", {transports: ["websocket"]});
+const socket = io("https://chessdevbackend.onrender.com", { transports: ["websocket"] });
 
 function Game() {
   const [chess, setchess] = useState(new Chess());
@@ -226,16 +226,16 @@ function Game() {
     query.append(element);
   }
 
-  function send_msg() {
-    socket.emit("send_button_pressed", document.getElementById("input_msg").value);
-    const query = document.querySelector(".chat-box")
-    let element = document.createElement("div");
-    element.innerText = `You: ${document.getElementById("input_msg").value}`;
-    element.classList.add("msg");
-    element.classList.add("my_msg");
-    query.append(element);
-    document.getElementById("input_msg").value = ""
-  }
+  // function send_msg() {
+  //   socket.emit("send_button_pressed", document.getElementById("input_msg").value);
+  //   const query = document.querySelector(".chat-box")
+  //   let element = document.createElement("div");
+  //   element.innerText = `You: ${document.getElementById("input_msg").value}`;
+  //   element.classList.add("msg");
+  //   element.classList.add("my_msg");
+  //   query.append(element);
+  //   document.getElementById("input_msg").value = ""
+  // }
 
   socket.off("got_a_message").on("got_a_message", (data) => {
     add_msg(data[0], data[1])
@@ -311,7 +311,7 @@ function Game() {
             Resign
           </button>
         </div>
-        <div className="chat-box">
+        {/* <div className="chat-box">
           <input
             className="msg_input"
             id="input_msg"
@@ -330,8 +330,8 @@ function Game() {
             id="send"
           >
             Send &#8594;
-          </button>
-        </div>
+          </button> */}
+        {/* </div> */}
       </div>
     </>
   );
